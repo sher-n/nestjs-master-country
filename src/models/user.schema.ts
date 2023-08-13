@@ -1,4 +1,4 @@
-import { prop } from '@typegoose/typegoose';
+import { Ref, prop } from '@typegoose/typegoose';
 import { Country } from './country.schema';
 
 export class User {
@@ -9,5 +9,5 @@ export class User {
   public password: string;
 
   @prop({ ref: () => Country, type: () => String })
-  public country?: Country;
+  public country?: Ref<Country>;
 }

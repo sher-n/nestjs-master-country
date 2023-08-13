@@ -16,6 +16,16 @@ export class CountriesController {
     return await this.countryService.create(country);
   }
 
+  @Post('test')
+  async createTest(@Body() country: Country): Promise<Country> {
+    return await this.countryService.createTest(country);
+  }
+
+  @Post('add')
+  async addPeople(@Body() country: Country): Promise<Country> {
+    return await this.countryService.addPeopleToCountry(country);
+  }
+
   @Delete()
   async delete(): Promise<{ message: string }> {
     return await this.countryService.delete();
