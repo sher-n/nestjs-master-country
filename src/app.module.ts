@@ -8,9 +8,7 @@ dotenv.config();
 
 @Module({
   imports: [
-    TypegooseModule.forRoot(
-      'mongodb+srv://admin:pass@cluster1.6gsaezt.mongodb.net/default?retryWrites=true&w=majority',
-    ),
+    TypegooseModule.forRoot(process.env.DB_CONN_STRING),
     CatsModule,
     CountriesModule,
     UserModule,
