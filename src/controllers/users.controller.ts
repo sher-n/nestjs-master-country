@@ -13,19 +13,32 @@ export class UsersController {
     private jwtService: JwtService,
   ) {}
 
-  @Get()
-  @ApiHeader({
-    name: 'auth',
-    required: true,
-    description: 'JWT token from login',
+  @Post('register')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        username: {
+          type: 'string',
+          description: 'This is unique name.',
+        },
+        password: {
+          type: 'string',
+          description: 'This is pasword',
+        },
+      },
+    },
   })
-  getUsers(
-    @Req() req: { header: { auth: string }; query: { isValid: string } },
-  ): Promise<User[]> | string {
-    if (verify(this.jwtService, req.header.auth)) return 'unauthorized';
-
-    return this.userService.findAll();
+  register(
+    @Body()
+    registerInput: {
+      username: string;
+      password: string;
+    },
+  ): Promise<User | { message: string }> {
+    return this.userService.register(registerInput);
   }
+
   @Post('login')
   @ApiBody({
     schema: {
@@ -63,30 +76,18 @@ export class UsersController {
     };
   }
 
-  @Post('register')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        username: {
-          type: 'string',
-          description: 'This is unique name.',
-        },
-        password: {
-          type: 'string',
-          description: 'This is pasword',
-        },
-      },
-    },
+  @Get()
+  @ApiHeader({
+    name: 'auth',
+    required: true,
+    description: 'JWT token from login',
   })
-  register(
-    @Body()
-    registerInput: {
-      username: string;
-      password: string;
-    },
-  ): Promise<User | { message: string }> {
-    return this.userService.register(registerInput);
+  getUsers(
+    @Req() req: { header: { auth: string }; query: { isValid: string } },
+  ): Promise<User[]> | string {
+    if (verify(this.jwtService, req.header.auth)) return 'unauthorized';
+
+    return this.userService.findAll();
   }
 
   @Delete()

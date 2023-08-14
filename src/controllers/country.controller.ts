@@ -1,7 +1,7 @@
-import { Body, Controller, Delete, Get, Post, Req } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post } from '@nestjs/common';
 import { CountryService } from '../country.service';
 import { Country } from 'src/models/country.schema';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Country Module')
 @Controller('countries')
@@ -14,18 +14,19 @@ export class CountriesController {
   }
 
   @Post()
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        name: {
+          type: 'string',
+          description: 'This is unique name.',
+        },
+      },
+    },
+  })
   async create(@Body() country: Country): Promise<Country> {
     return await this.countryService.create(country);
-  }
-
-  @Post('test')
-  async createTest(
-    @Req() req: { headers: { sig: string }; query: { isValid: any } },
-    @Body() body: any,
-  ): Promise<any> {
-    console.log(req.headers.sig, body);
-    if (req.query.isValid == 'false') return 'Unauthorized';
-    return 'ok';
   }
 
   @Delete()
