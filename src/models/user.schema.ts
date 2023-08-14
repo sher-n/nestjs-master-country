@@ -8,6 +8,6 @@ export class User {
   @prop({ required: true })
   public password: string;
 
-  @prop({ ref: () => Country, type: () => String })
-  public country?: Ref<Country>;
+  @prop({ ref: () => Country.name, type: () => String })
+  public country: Ref<Country>;
 }

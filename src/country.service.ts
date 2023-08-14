@@ -14,49 +14,12 @@ export class CountryService {
   ) {}
 
   async create(createCountryDto: { name: string }): Promise<Country> {
-    const createdCountry = new this.countryModel(createCountryDto);
-    return await createdCountry.save();
-  }
-
-  async createTest(createCountryDto: { name: string }): Promise<Country> {
-    const user = await new this.userModel({
-      username: 'ccc1',
-      password: '123',
-    });
-    await user.save();
-
-    const findCountry = await this.countryModel.findOne();
-
-    const country = await new this.countryModel({
-      name: createCountryDto.name,
-      users: [user],
-    });
-
-    console.log({
-      findCountry,
-    });
-    return await country.save();
-  }
-
-  async addPeopleToCountry(userObj: { name: string }): Promise<Country> {
-    const findCountry = await this.countryModel.findOne();
-    const country = await findCountry.populate('users');
-    const user = await new this.userModel({
-      username: userObj.name,
-      password: '123',
-      country: country,
-    });
-    await user.save();
-    await this.countryModel.findOneAndUpdate({
-      users: [...findCountry.users, user],
-    });
-    console.log({
-      findCountry,
-      country,
-      user,
-      id: findCountry.users,
-    });
-    return await country.save();
+    const country = await this.countryModel.findOne();
+    if (!country?._id) {
+      const createdCountry = new this.countryModel(createCountryDto);
+      return await createdCountry.save();
+    }
+    return await country;
   }
 
   async delete(): Promise<{ message: string }> {

@@ -1,32 +1,25 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
+import { verifyMiddleware } from './common/middleware/verify.middleware';
 import { TypegooseModule } from 'nestjs-typegoose';
-import { CatsModule } from './cat.module.js';
-import { CountriesModule } from './country.module.js';
+import { CountryModule } from './country.module.js';
 import { UserModule } from './user.module.js';
 import * as dotenv from 'dotenv';
+import { SwaggerModule } from '@nestjs/swagger';
+import { JwtModule } from '@nestjs/jwt';
 dotenv.config();
 
 @Module({
   imports: [
     TypegooseModule.forRoot(process.env.DB_CONN_STRING),
-    CatsModule,
-    CountriesModule,
+    CountryModule,
     UserModule,
+    SwaggerModule,
+    JwtModule,
   ],
 })
-export class ApplicationModule {}
-
-// import { Module } from '@nestjs/common';
-// import { AppController } from './controllers/app.controller';
-// import { UsersController } from './controllers/users.controller';
-// import { AppService } from './app.service';
-// import * as dotenv from 'dotenv';
-// import { MongooseModule } from '@nestjs/mongoose';
-// dotenv.config();
-
-// @Module({
-//   imports: [MongooseModule.forRoot(process.env.DB_CONN_STRING)],
-//   controllers: [AppController, UsersController],
-//   providers: [AppService],
-// })
-// export class AppModule {}
+export class ApplicationModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(verifyMiddleware).forRoutes('countries/test');
+    consumer.apply(verifyMiddleware).forRoutes('users');
+  }
+}

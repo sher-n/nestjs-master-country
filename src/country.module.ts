@@ -13,4 +13,4 @@ import { User } from './models/user.schema';
   controllers: [CountriesController],
   providers: [CountryService],
 })
-export class CountriesModule {}
+export class CountryModule {}
