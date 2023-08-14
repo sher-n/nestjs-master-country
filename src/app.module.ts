@@ -19,7 +19,6 @@ dotenv.config();
 })
 export class ApplicationModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(verifyMiddleware).forRoutes('countries/test');
     consumer.apply(verifyMiddleware).forRoutes('users');
   }
 }
