@@ -71,8 +71,7 @@ export class UserService {
   }
 
   async findAll(): Promise<User[] | null> {
-    const user = await this.userModel.find({ country: 'LAOS' }).exec();
-    // await user.populate('country');
+    const user = await this.userModel.find().exec();
     return user;
   }
 }
